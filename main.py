@@ -5,7 +5,7 @@ import sxtwl
 import matplotlib.pyplot as plt
 import io
 
-# --- ĐIỀN THÔNG TIN ---
+# --- ĐIỀN THÔNG TIN CỦA BÁC ---
 TOKEN = '8667795071:AAEQ9CF6xhXIDsPUeVUvHZU-HOUDU6fpLv4'
 CHAT_ID = '1176585769'
 
@@ -53,6 +53,7 @@ def tinh_chi_tiet(can, chi, na_str):
 
 async def main():
     bot = telegram.Bot(token=TOKEN)
+    # Lấy ngày mới (tính từ 23h đêm nay)
     target_day = datetime.now() + timedelta(hours=2) 
     lunar = sxtwl.fromSolar(target_day.year, target_day.month, target_day.day)
     
@@ -63,7 +64,9 @@ async def main():
     na_day = NAP_AM.get(f"{d_can} {d_chi}")
     dc_d, dchi_d, dna_d, t_day = tinh_chi_tiet(d_can, d_chi, na_day)
 
-    msg = f"📊 **PHÂN TÍCH NGÀY: {d_can} {d_chi}**\n"
+    # XÂY DỰNG NỘI DUNG TIN NHẮN CHI TIẾT
+    msg = f"📊 **PHÂN TÍCH NGÀY MỚI: {d_can} {d_chi}**\n"
+    msg += f"(Bắt đầu từ giờ Tý 23:00 hôm nay)\n\n"
     msg += f"• Thiên Can: {d_can} ➔ `{dc_d:+}đ`\n• Địa Chi: {d_chi} ➔ `{dchi_d:+}đ`\n• Nạp Âm: {na_day} ➔ `{dna_d:+}đ`\n"
     msg += f"• Nội tại Ngày: {check_noi_tai(d_can, d_chi)}\n"
     msg += f"➔ **TỔNG ĐIỂM NGÀY: {t_day:+}**\n"
@@ -88,7 +91,7 @@ async def main():
         msg += f"• Nội tại: {check_noi_tai(h_can, h_chi)}\n"
         msg += f"➔ **Điểm Giờ: {sc:+}** | {icon}\n\n"
 
-    # Vẽ biểu đồ
+    # VẼ BIỂU ĐỒ TRỰC QUAN
     plt.figure(figsize=(10, 6))
     colors = ['#2ecc71' if s >= 2 else '#e74c3c' if s <= -2 else '#f39c12' for s in scores]
     plt.bar(labels, scores, color=colors, edgecolor='black')
@@ -100,10 +103,8 @@ async def main():
     buf.seek(0)
     plt.close()
 
+    # GỬI CẢ ẢNH VÀ NỘI DUNG CHI TIẾT
     await bot.send_photo(chat_id=CHAT_ID, photo=buf, caption=msg, parse_mode='Markdown')
-
-if __name__ == "__main__":
-    asyncio.run(main())
 
 if __name__ == "__main__":
     asyncio.run(main())
