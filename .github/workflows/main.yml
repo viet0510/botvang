@@ -23,4 +23,4 @@ jobs:
           pip install python-telegram-bot sxtwl matplotlib
 
       - name: Run bot
-        run: python main.py
+        run: python phongthuy.py
