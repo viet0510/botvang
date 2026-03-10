@@ -6,8 +6,8 @@ import matplotlib.pyplot as plt
 import io
 
 # --- ĐIỀN THÔNG TIN CỦA BÁC ---
-TOKEN = 'ĐIỀN_TOKEN_VÀO_ĐÂY'
-CHAT_ID = 'ĐIỀN_ID_VÀO_ĐÂY'
+TOKEN = '8667795071:AAEQ9CF6xhXIDsPUeVUvHZU-HOUDU6fpLv4'
+CHAT_ID = '1176585769'
 
 NGU_HANH = {
     'Giáp': 'Mộc', 'Ất': 'Mộc', 'Bính': 'Hỏa', 'Đinh': 'Hỏa', 'Mậu': 'Thổ', 'Kỷ': 'Thổ', 'Canh': 'Kim', 'Tân': 'Kim', 'Nhâm': 'Thủy', 'Quý': 'Thủy',
