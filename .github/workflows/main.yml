@@ -2,23 +2,24 @@ name: Run Bot Vang Daily
 
 on:
   schedule:
-    - cron: '16 00 * * *'  # 16:00 UTC = 23:00 Việt Nam
-  workflow_dispatch:      # Nút bấm để bác có thể chạy thử ngay lập tức
+    - cron: '0 16 * * *'  # Chạy đúng 00 phút, 16 giờ UTC (tức 23:00 VN)
+  workflow_dispatch:      # Nút bấm thủ công vẫn giữ nguyên
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4 # Cập nhật lên v4 cho ổn định bác nhé
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4 # Cập nhật lên v4 luôn
         with:
-          python_version: '3.9'
+          python-python: '3.9'
 
       - name: Install dependencies
-        run: pip install python-telegram-bot sxtwl matplotlib
+        run: |
+          pip install python-telegram-bot sxtwl matplotlib
 
       - name: Run bot
         run: python main.py
