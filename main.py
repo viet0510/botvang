@@ -44,7 +44,6 @@ def check_noi_tai(can, chi):
 def tinh_chi_tiet(can, chi, na_str):
     h_can, h_chi = NGU_HANH[can], NGU_HANH[chi]
     h_na = na_str.split()[-1]
-    # Logic chấm điểm: Thổ (1đ), Kim (1đ cho Can, 2đ cho Chi)
     d_can = 1 if h_can in ['Kim', 'Thổ'] else -1
     d_chi = 2 if h_chi in ['Kim', 'Thổ'] else -2
     d_na = 1 if h_na in ['Kim', 'Thổ'] else -1
@@ -52,8 +51,19 @@ def tinh_chi_tiet(can, chi, na_str):
 
 async def main():
     bot = telegram.Bot(token=TOKEN)
-    # Lấy ngày mới (tính từ 23h đêm nay)
-    target_day = datetime.now() + timedelta(hours=2) 
+    
+    # 1. LẤY GIỜ VIỆT NAM (Dù chạy trên GitHub server Mỹ/Âu)
+    vn_tz = pytz.timezone('Asia/Ho_Chi_Minh')
+    now = datetime.now(vn_tz)
+    
+    # 2. LOGIC NHẢY NGÀY: Nếu từ 23h trở đi, lấy dữ liệu ngày mai
+    if now.hour >= 23:
+        target_day = now + timedelta(days=1)
+        tieude = "DỰ BÁO NGÀY MAI (SỚM)"
+    else:
+        target_day = now
+        tieude = "PHÂN TÍCH NGÀY HIỆN TẠI"
+
     lunar = sxtwl.fromSolar(target_day.year, target_day.month, target_day.day)
     
     can_list = ["Giáp", "Ất", "Bính", "Đinh", "Mậu", "Kỷ", "Canh", "Tân", "Nhâm", "Quý"]
@@ -63,9 +73,10 @@ async def main():
     na_day = NAP_AM.get(f"{d_can} {d_chi}")
     dc_d, dchi_d, dna_d, t_day = tinh_chi_tiet(d_can, d_chi, na_day)
 
-    # XÂY DỰNG NỘI DUNG VĂN BẢN (Text only)
-    msg = f"📊 **PHÂN TÍCH NGÀY MỚI: {d_can} {d_chi}**\n"
-    msg += f"(Bắt đầu từ giờ Tý 23:00 hôm nay)\n\n"
+    # 3. XÂY DỰNG NỘI DUNG
+    msg = f"📊 **{tieude}: {d_can} {d_chi}**\n"
+    msg += f"📅 Dương lịch: {target_day.strftime('%d/%m/%Y')}\n"
+    msg += f"(Tính từ giờ Tý 23:00)\n\n"
     msg += f"• Thiên Can: {d_can} ➔ `{dc_d:+}đ`\n• Địa Chi: {d_chi} ➔ `{dchi_d:+}đ`\n• Nạp Âm: {na_day} ➔ `{dna_d:+}đ`\n"
     msg += f"• Nội tại Ngày: {check_noi_tai(d_can, d_chi)}\n"
     msg += f"➔ **TỔNG ĐIỂM NGÀY: {t_day:+}**\n"
@@ -86,7 +97,6 @@ async def main():
         msg += f"• Nội tại: {check_noi_tai(h_can, h_chi)}\n"
         msg += f"➔ **Điểm Giờ: {sc:+}** | {icon}\n\n"
 
-    # GỬI DUY NHẤT TIN NHẮN VĂN BẢN
     await bot.send_message(chat_id=CHAT_ID, text=msg, parse_mode='Markdown')
 
 if __name__ == "__main__":
