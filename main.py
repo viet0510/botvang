@@ -4,7 +4,7 @@ from datetime import datetime, timedelta
 import sxtwl
 import pytz
 # --- ĐIỀN THÔNG TIN CỦA BÁC ---
-TOKEN = '6736219230:AAEnKditiaoZ4P115U8uG9mFZ2l2HsethIk'
+TOKEN = '8667795071:AAE5PruSlnMwiMixE9aCtFonFLiilyxX6fw'
 CHAT_ID = '1176585769'
 
 NGU_HANH = {
